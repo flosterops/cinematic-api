@@ -1,9 +1,7 @@
 {
-  "name": "api",
+  "name": "cinematic-api",
   "version": "1.0.0",
   "main": "index.ts",
-  "author": "Eugene Volynko",
-  "license": "MIT",
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
