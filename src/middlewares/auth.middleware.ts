@@ -1,23 +1,18 @@
 // utils
-import { Request, Response, NextFunction } from "express";
-import { ErrorCode } from "../utils/error-handler/error-code";
-import { ErrorException } from "../utils/error-handler/error-exception";
-import { IUser } from "../models/user.model";
-import { JWT_SECRET, TOKEN_EXPIRES_IN } from "../config";
-import jwt from "jsonwebtoken";
+import { NextFunction, Request, Response } from 'express';
+import { ErrorCode } from '../utils/error-handler/error-code';
+import { ErrorException } from '../utils/error-handler/error-exception';
+import { User } from '../models/user';
+import { JWT_SECRET, TOKEN_EXPIRES_IN } from '../config';
+import jwt from 'jsonwebtoken';
 
-export const AuthMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const auth = req.headers.authorization;
-  if (auth && auth.startsWith("Bearer")) {
+  if (auth && auth.startsWith('Bearer')) {
     const token = auth.slice(7);
 
     try {
-      const tokenData = verifyToken(token);
-      req.body.tokenData = tokenData;
+      req.body.tokenData = verifyToken(token);
       next();
     } catch (error) {
       throw new ErrorException(ErrorCode.Unauthenticated);
@@ -27,23 +22,21 @@ export const AuthMiddleware = (
   }
 };
 
-export const generateAuthToken = (user: IUser): string => {
-  const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET, {
+export const generateAuthToken = (user: User): string => {
+  return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
     expiresIn: TOKEN_EXPIRES_IN,
   });
-
-  return token;
 };
 
-export const verifyToken = (token?: string): { _id: string; email: string } => {
+export const verifyToken = (token?: string): { id: string; email: string } => {
   try {
     if (token) {
-      if (token.startsWith("Bearer")) {
+      if (token.startsWith('Bearer')) {
         token = token.slice(7);
       }
 
       const tokenData = jwt.verify(token, JWT_SECRET);
-      return tokenData as { _id: string; email: string };
+      return tokenData as { id: string; email: string };
     } else {
       throw new ErrorException(ErrorCode.Unauthenticated);
     }
