@@ -1,9 +1,10 @@
 // utils
-import express from "express";
-import { AuthMiddleware } from "../middlewares/auth.middleware";
+import express from 'express';
+import { AuthMiddleware } from '../middlewares/auth.middleware';
 
 // controllers
-import { signIn, signUp, getMe } from "../controllers/user.controller";
+import { signIn, signUp, getMe, setRole } from '../controllers/user.controller';
+import { RoleMiddleware } from '../middlewares/role.middleware';
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ const router = express.Router();
  *      '404':
  *        description: User not found
  */
-router.post("/sign-in", signIn);
+router.post('/sign-in', signIn);
 
 /**
  * @swagger
@@ -70,7 +71,7 @@ router.post("/sign-in", signIn);
  *      '400':
  *        description: User already exists
  */
-router.post("/sign-up", signUp);
+router.post('/sign-up', signUp);
 
 /**
  * @swagger
@@ -87,6 +88,8 @@ router.post("/sign-up", signUp);
  *      '404':
  *        description: User not found
  */
-router.get("/me", AuthMiddleware, getMe);
+router.get('/me', AuthMiddleware, getMe);
+
+router.patch('/set-role', [AuthMiddleware, RoleMiddleware], setRole);
 
 export default router;

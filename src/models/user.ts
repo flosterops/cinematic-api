@@ -6,6 +6,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   email: string;
   password: string;
   name: string;
+  role: string;
 
   static associate(models: any) {
     // define association here
@@ -32,8 +33,14 @@ User.init(
       type: DataTypes.STRING(128),
       defaultValue: '',
     },
+    role: {
+      type: DataTypes.STRING(10),
+      defaultValue: 'user',
+    },
   },
   { sequelize: db.sequelize, tableName: 'user' }
 );
+
+User.sync();
 
 export { User };
