@@ -3,10 +3,12 @@ import { Request, Response, NextFunction } from 'express';
 import { ErrorException } from '../utils/error-handler/error-exception';
 import { ErrorCode } from '../utils/error-handler/error-code';
 import { comparePassword } from '../utils/password-hash';
-import { generateAuthToken, verifyToken } from '../middlewares/auth.middleware';
+import { generateAuthToken } from '../middlewares/auth.middleware';
 import { hashPassword } from '../utils/password-hash';
 import { User } from '../models/user';
 import { TOKEN_EXPIRES_IN } from '../config';
+import { verifyToken } from '../utils/token';
+import { isRole } from '../utils/role/intex';
 
 export const signIn = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
@@ -31,7 +33,6 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
 export const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { email, name, password } = req.body;
   // check if user exists
-  await User.sync();
   const userExists = await User.findOne({ rejectOnEmpty: false, where: { email } });
   if (!!userExists) {
     next(new ErrorException(ErrorCode.DuplicateEntityError, { email }));
@@ -61,4 +62,22 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
   } else {
     next(new ErrorException(ErrorCode.NotFound));
   }
+};
+
+export const setRole = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, role } = req.body;
+
+  console.log(req.body.tokenData);
+
+  if (!isRole(role)) {
+    return next(new ErrorException(ErrorCode.NotFound, { email }));
+  }
+
+  const [affectedCount] = await User.update({ role }, { where: { email } });
+
+  if (!affectedCount) {
+    return next(new ErrorException(ErrorCode.NotFound, { email }));
+  }
+
+  res.send({ done: true });
 };

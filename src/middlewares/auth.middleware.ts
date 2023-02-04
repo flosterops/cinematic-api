@@ -5,6 +5,7 @@ import { ErrorException } from '../utils/error-handler/error-exception';
 import { User } from '../models/user';
 import { JWT_SECRET, TOKEN_EXPIRES_IN } from '../config';
 import jwt from 'jsonwebtoken';
+import { verifyToken } from '../utils/token';
 
 export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const auth = req.headers.authorization;
@@ -23,24 +24,7 @@ export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) 
 };
 
 export const generateAuthToken = (user: User): string => {
-  return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+  return jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
     expiresIn: TOKEN_EXPIRES_IN,
   });
-};
-
-export const verifyToken = (token?: string): { id: string; email: string } => {
-  try {
-    if (token) {
-      if (token.startsWith('Bearer')) {
-        token = token.slice(7);
-      }
-
-      const tokenData = jwt.verify(token, JWT_SECRET);
-      return tokenData as { id: string; email: string };
-    } else {
-      throw new ErrorException(ErrorCode.Unauthenticated);
-    }
-  } catch (error) {
-    throw new ErrorException(ErrorCode.Unauthenticated);
-  }
 };
