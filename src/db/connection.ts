@@ -1,36 +1,36 @@
-// utils
-import mongoose, { Connection } from "mongoose";
+import { DB_CONFIG } from '../config/db';
+import { Sequelize } from 'sequelize';
 
-let mongooseConnection: Connection | null = null;
-
-export async function connect(): Promise<void> {
-  try {
-    mongoose.connection.on("connecting", () => {
-      console.log(`MongoDB: connecting.`);
-    });
-    mongoose.connection.on("connected", () => {
-      console.log("MongoDB: connected.");
-    });
-    mongoose.connection.on("disconnecting", () => {
-      console.log("MongoDB: disconnecting.");
-    });
-    mongoose.connection.on("disconnected", () => {
-      console.log("MongoDB: disconnected.");
-    });
-
-    if (
-      mongoose.connection.readyState !== 1 &&
-      mongoose.connection.readyState !== 2
-    ) {
-      const conn = await mongoose.connect("mongodb://localhost:27017/db", {
-        autoIndex: true,
-        serverSelectionTimeoutMS: 5000,
-      });
-      mongooseConnection = conn.connection;
-    }
-  } catch (error) {
-    console.log(`Error connecting to DB`, error);
-  }
+export interface IDB {
+  Sequelize: typeof Sequelize;
+  sequelize: typeof sequelize;
 }
 
-export default mongooseConnection;
+const sequelize = new Sequelize(DB_CONFIG.db, DB_CONFIG.user, DB_CONFIG.password, {
+  host: DB_CONFIG.host,
+  dialect: DB_CONFIG.dialect as 'postgres',
+
+  pool: {
+    max: DB_CONFIG.pool.max,
+    min: DB_CONFIG.pool.min,
+    acquire: DB_CONFIG.pool.acquire,
+    idle: DB_CONFIG.pool.idle,
+  },
+});
+
+const db: IDB = {} as IDB;
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+const connect = async () => {
+  try {
+    await db.sequelize.authenticate();
+    console.log('Successfully connected to DB');
+  } catch (e: any) {
+    console.log('Failed to connect to DB');
+    console.log(e.message);
+  }
+};
+
+export { db, connect };
