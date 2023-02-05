@@ -10,6 +10,7 @@ import cors from 'cors';
 // routes
 import userRoutes from './routes/user.routes';
 import theaterRouter from './routes/theater.routes';
+import movieRouter from './routes/movie.routes';
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/user', userRoutes);
 app.use('/theater', theaterRouter);
+app.use('/movie', movieRouter);
 
 app.use(errorHandler); // registration of handler
 

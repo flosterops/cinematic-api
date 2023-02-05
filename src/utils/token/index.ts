@@ -4,7 +4,9 @@ import { JWT_SECRET } from '../../config';
 import { ErrorException } from '../error-handler/error-exception';
 import { ErrorCode } from '../error-handler/error-code';
 
-export const verifyToken = (token?: string): { id: string; email: string; role: ERoles } => {
+export const verifyToken = (
+  token?: string
+): { id: string; email: string; role: ERoles } => {
   try {
     if (token) {
       if (token.startsWith('Bearer')) {

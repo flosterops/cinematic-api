@@ -10,10 +10,17 @@ import { TOKEN_EXPIRES_IN } from '../config';
 import { verifyToken } from '../utils/token';
 import { isRole } from '../utils/role/intex';
 
-export const signIn = async (req: Request, res: Response, next: NextFunction) => {
+export const signIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
   // check if user exists
-  const userExists = await User.findOne({ rejectOnEmpty: true, where: { email } });
+  const userExists = await User.findOne({
+    rejectOnEmpty: true,
+    where: { email },
+  });
   if (!userExists) {
     next(new ErrorException(ErrorCode.NotFound));
   } else {
@@ -30,10 +37,17 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export const signUp = async (req: Request, res: Response, next: NextFunction) => {
+export const signUp = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, name, password } = req.body;
   // check if user exists
-  const userExists = await User.findOne({ rejectOnEmpty: false, where: { email } });
+  const userExists = await User.findOne({
+    rejectOnEmpty: false,
+    where: { email },
+  });
   if (!!userExists) {
     next(new ErrorException(ErrorCode.DuplicateEntityError, { email }));
   }
@@ -50,7 +64,11 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
   res.send({ done: true });
 };
 
-export const getMe = async (req: Request, res: Response, next: NextFunction) => {
+export const getMe = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const decoded = verifyToken(req.headers.authorization);
 
   const user = await User.findOne({ where: { id: decoded.id } });
@@ -64,7 +82,11 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
-export const setRole = async (req: Request, res: Response, next: NextFunction) => {
+export const setRole = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, role } = req.body;
 
   console.log(req.body.tokenData);
