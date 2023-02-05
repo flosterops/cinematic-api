@@ -6,19 +6,22 @@ import {
 } from 'sequelize';
 import { db } from '../db/connection';
 
-class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+class Movie extends Model<
+  InferAttributes<Movie>,
+  InferCreationAttributes<Movie>
+> {
   id: number;
-  email: string;
-  password: string;
   name: string;
-  role: string;
+  description: string;
+  duration: number;
+  age: string;
 
   static associate(models: any) {
     // define association here
   }
 }
 
-User.init(
+Movie.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -26,26 +29,26 @@ User.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    email: {
-      type: DataTypes.STRING(128),
-      defaultValue: '',
-    },
-    password: {
-      type: DataTypes.STRING(128),
-      defaultValue: '',
-    },
     name: {
       type: DataTypes.STRING(128),
       defaultValue: '',
     },
-    role: {
-      type: DataTypes.STRING(10),
-      defaultValue: 'user',
+    description: {
+      type: DataTypes.STRING(128),
+      defaultValue: '',
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    age: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
   },
-  { sequelize: db.sequelize, tableName: 'user' }
+  { sequelize: db.sequelize, tableName: 'movie' }
 );
 
-User.sync();
+Movie.sync();
 
-export { User };
+export { Movie };

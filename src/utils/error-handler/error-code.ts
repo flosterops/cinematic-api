@@ -8,4 +8,6 @@ export class ErrorCode {
   public static readonly WrongCredentials = 'WrongCredentials';
   public static readonly NoPermission = 'NoPermission';
   public static readonly CreationFailed = 'CreationFailed';
+  public static readonly UpdateFailed = 'UpdateFailed';
+  public static readonly GetAllFailed = 'GetAllFailed';
 }

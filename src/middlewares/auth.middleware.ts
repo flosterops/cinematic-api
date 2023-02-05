@@ -7,7 +7,11 @@ import { JWT_SECRET, TOKEN_EXPIRES_IN } from '../config';
 import jwt from 'jsonwebtoken';
 import { verifyToken } from '../utils/token';
 
-export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const AuthMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const auth = req.headers.authorization;
   if (auth && auth.startsWith('Bearer')) {
     const token = auth.slice(7);
@@ -24,7 +28,11 @@ export const AuthMiddleware = (req: Request, res: Response, next: NextFunction) 
 };
 
 export const generateAuthToken = (user: User): string => {
-  return jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, {
-    expiresIn: TOKEN_EXPIRES_IN,
-  });
+  return jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    JWT_SECRET,
+    {
+      expiresIn: TOKEN_EXPIRES_IN,
+    }
+  );
 };

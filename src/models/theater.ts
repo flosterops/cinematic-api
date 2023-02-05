@@ -1,7 +1,15 @@
-import { Model, InferAttributes, InferCreationAttributes, DataTypes } from 'sequelize';
+import {
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  DataTypes,
+} from 'sequelize';
 import { db } from '../db/connection';
 
-class Theater extends Model<InferAttributes<Theater>, InferCreationAttributes<Theater>> {
+class Theater extends Model<
+  InferAttributes<Theater>,
+  InferCreationAttributes<Theater>
+> {
   id: number;
   name: string;
   // tslint:disable-next-line:variable-name

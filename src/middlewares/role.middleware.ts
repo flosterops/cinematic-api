@@ -6,7 +6,11 @@ import { verifyToken } from '../utils/token';
 
 export const checkAdminRole = (role: ERoles) => role === ERoles.admin;
 
-export const RoleMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const RoleMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const auth = req.headers.authorization;
   if (auth && auth.startsWith('Bearer')) {
     const token = auth.slice(7);

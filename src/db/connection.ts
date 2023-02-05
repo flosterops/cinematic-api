@@ -6,17 +6,22 @@ export interface IDB {
   sequelize: typeof sequelize;
 }
 
-const sequelize = new Sequelize(DB_CONFIG.db, DB_CONFIG.user, DB_CONFIG.password, {
-  host: DB_CONFIG.host,
-  dialect: DB_CONFIG.dialect as 'postgres',
+const sequelize = new Sequelize(
+  DB_CONFIG.db,
+  DB_CONFIG.user,
+  DB_CONFIG.password,
+  {
+    host: DB_CONFIG.host,
+    dialect: DB_CONFIG.dialect as 'postgres',
 
-  pool: {
-    max: DB_CONFIG.pool.max,
-    min: DB_CONFIG.pool.min,
-    acquire: DB_CONFIG.pool.acquire,
-    idle: DB_CONFIG.pool.idle,
-  },
-});
+    pool: {
+      max: DB_CONFIG.pool.max,
+      min: DB_CONFIG.pool.min,
+      acquire: DB_CONFIG.pool.acquire,
+      idle: DB_CONFIG.pool.idle,
+    },
+  }
+);
 
 const db: IDB = {} as IDB;
 

@@ -9,7 +9,7 @@ import {
   getAll,
   remove,
   update,
-} from '../controllers/theater.controller';
+} from '../controllers/movie.controller';
 
 const router = express.Router();
 
