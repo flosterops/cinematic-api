@@ -11,7 +11,8 @@ import cors from 'cors';
 import userRoutes from './routes/user.routes';
 import theaterRouter from './routes/theater.routes';
 import movieRouter from './routes/movie.routes';
-import seatRouter from './routes/seat.router';
+import seatRouter from './routes/seat.routes';
+import ratingRouter from './routes/rating.routes';
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/user', userRoutes);
 app.use('/theater', theaterRouter);
 app.use('/movie', movieRouter);
 app.use('/seat', seatRouter);
+app.use('/rating', ratingRouter);
 
 app.use(errorHandler); // registration of handler
 
