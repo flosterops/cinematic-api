@@ -13,6 +13,7 @@ import theaterRouter from './routes/theater.routes';
 import movieRouter from './routes/movie.routes';
 import seatRouter from './routes/seat.routes';
 import ratingRouter from './routes/rating.routes';
+import ticketRouter from './routes/ticket.routes';
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/theater', theaterRouter);
 app.use('/movie', movieRouter);
 app.use('/seat', seatRouter);
 app.use('/rating', ratingRouter);
+app.use('/ticket', ticketRouter);
 
 app.use(errorHandler); // registration of handler
 
