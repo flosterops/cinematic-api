@@ -7,4 +7,5 @@ export class ErrorCode {
   public static readonly UnknownError = 'UnknownError';
   public static readonly WrongCredentials = 'WrongCredentials';
   public static readonly NoPermission = 'NoPermission';
+  public static readonly CreationFailed = 'CreationFailed';
 }
