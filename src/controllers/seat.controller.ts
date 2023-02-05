@@ -3,32 +3,30 @@ import { InferCreationAttributes } from 'sequelize';
 import { ErrorException } from '../utils/error-handler/error-exception';
 import { ErrorCode } from '../utils/error-handler/error-code';
 import { getExistedFields } from '../utils/get-existed-fields';
-import { Movie } from '../models/movie';
+import { Seat } from '../models/seat';
 
 export const create = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { name, description, duration, age } = req.body;
+  // tslint:disable-next-line:variable-name
+  const { number, row, type, removable } = req.body;
 
   try {
-    const movie: Omit<InferCreationAttributes<Movie, { omit: 'id' }>, 'id'> = {
-      name,
-      description,
-      duration,
-      age,
+    const seat: Omit<InferCreationAttributes<Seat, { omit: 'id' }>, 'id'> = {
+      number,
+      row,
+      type,
+      removable,
     };
-    const entity = await Movie.create(movie as any);
+    const entity = await Seat.create(seat as any);
 
     if (!entity) {
       return next(new ErrorException(ErrorCode.CreationFailed));
     }
 
-    res.send({
-      done: true,
-      movie: entity,
-    });
+    res.send({ done: true, movie: entity });
   } catch (e) {
     return next(new ErrorException(ErrorCode.CreationFailed));
   }
@@ -40,22 +38,23 @@ export const update = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const { name, description, duration, age } = req.body;
+  // tslint:disable-next-line:variable-name
+  const { number, row, type, removable } = req.body;
 
   try {
-    const movie = getExistedFields({ name, description, duration, age }, [
-      'name',
-      'description',
-      'duration',
-      'age',
+    const seat = getExistedFields({ number, row, type, removable }, [
+      'number',
+      'row',
+      'type',
+      'removable',
     ]);
-    const entity = await Movie.update(movie, { where: { id } });
+    const entity = await Seat.update(seat, { where: { id } });
 
     if (!entity) {
       return next(new ErrorException(ErrorCode.UpdateFailed));
     }
 
-    res.send({ done: true, movie: entity });
+    res.send({ done: true, seat: entity });
   } catch (e) {
     return next(new ErrorException(ErrorCode.UpdateFailed));
   }
@@ -69,7 +68,7 @@ export const remove = async (
   const { id } = req.params;
 
   try {
-    const affectedEntities = await Movie.destroy({ where: { id } });
+    const affectedEntities = await Seat.destroy({ where: { id } });
 
     if (!affectedEntities) {
       return next(new ErrorException(ErrorCode.CreationFailed));
@@ -87,8 +86,8 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    const movies = await Movie.findAll();
-    res.send({ done: true, movies });
+    const seats = await Seat.findAll();
+    res.send({ done: true, seats });
   } catch (e) {
     return next(new ErrorException(ErrorCode.GetAllFailed));
   }
@@ -98,8 +97,8 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
-    const movie = await Movie.findOne({ where: { id } });
-    res.send({ done: true, movie });
+    const seat = await Seat.findOne({ where: { id } });
+    res.send({ done: true, seat });
   } catch (e) {
     return next(new ErrorException(ErrorCode.NotFound));
   }
