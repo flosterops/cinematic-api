@@ -20,6 +20,9 @@ class Movie extends Model<
     this.hasMany(models.Show, {
       foreignKey: 'movieId',
     });
+    this.hasMany(models.Rating, {
+      foreignKey: 'movieId',
+    });
     // define association here
   }
 }
