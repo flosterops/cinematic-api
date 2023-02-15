@@ -14,7 +14,7 @@ class Rating extends Model<
   stars: number;
   review: string;
 
-  static associate() {
+  static associate(models: any) {
     // define association here
   }
 }
