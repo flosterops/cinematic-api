@@ -1,7 +1,6 @@
 // utils
 import express from 'express';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
-import { RoleMiddleware } from '../middlewares/role.middleware';
 
 import {
   create,
@@ -13,14 +12,14 @@ import {
 
 const router = express.Router();
 
-router.get('/', AuthMiddleware, getAll);
+router.get('/get-movie-rating/:movieId', AuthMiddleware, getAll);
 
 router.get('/get/:id', AuthMiddleware, get);
 
-router.patch('/update/:id', [AuthMiddleware, AuthMiddleware], update);
+router.patch('/update/:id', [AuthMiddleware], update);
 
-router.delete('/delete/:id', [AuthMiddleware, RoleMiddleware], remove);
+router.delete('/delete/:id', [AuthMiddleware], remove);
 
-router.post('/', [AuthMiddleware, RoleMiddleware], create);
+router.post('/add-review/:movieId', [AuthMiddleware], create);
 
 export default router;

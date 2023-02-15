@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { InferCreationAttributes } from 'sequelize';
 import { ErrorException } from '../utils/error-handler/error-exception';
 import { ErrorCode } from '../utils/error-handler/error-code';
 import { getExistedFields } from '../utils/get-existed-fields';
@@ -10,13 +9,12 @@ export const create = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { movieId } = req.params;
   const { stars, review } = req.body;
 
   try {
-    const rating: Omit<
-      InferCreationAttributes<Rating, { omit: 'id' }>,
-      'id'
-    > = {
+    const rating: any = {
+      movieId,
       stars,
       review,
     };
@@ -82,8 +80,9 @@ export const getAll = async (
   res: Response,
   next: NextFunction
 ) => {
+  const { movieId } = req.params;
   try {
-    const ratings = await Rating.findAll();
+    const ratings = await Rating.findAll({ where: { movieId } as any });
     res.send({ done: true, ratings });
   } catch (e) {
     return next(new ErrorException(ErrorCode.GetAllFailed));

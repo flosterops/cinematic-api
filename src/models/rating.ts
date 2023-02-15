@@ -15,6 +15,7 @@ class Rating extends Model<
   review: string;
 
   static associate(models: any) {
+    this.belongsTo(models.Movie, { foreignKey: 'movieId' });
     // define association here
   }
 }
