@@ -11,10 +11,14 @@ class Seat extends Model<InferAttributes<Seat>, InferCreationAttributes<Seat>> {
   number: number;
   row: number;
   type: string;
-  removable: string;
+  reserved: boolean;
 
   static associate(models: any) {
     // define association here
+    this.hasMany(models.Ticket, { foreignKey: 'seatId' });
+    this.belongsTo(models.Theater, {
+      foreignKey: 'theaterId',
+    });
   }
 }
 
@@ -38,15 +42,18 @@ Seat.init(
       type: DataTypes.STRING(64),
       allowNull: false,
     },
-    removable: {
+    reserved: {
       type: DataTypes.BOOLEAN,
-      defaultValue: 0,
+      defaultValue: false,
       allowNull: false,
     },
   },
-  { sequelize: db.sequelize, tableName: 'seat' }
+  {
+    sequelize: db.sequelize,
+    tableName: 'seat',
+    createdAt: false,
+    updatedAt: false,
+  }
 );
-
-Seat.sync();
 
 export { Seat };

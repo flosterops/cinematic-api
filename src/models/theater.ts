@@ -14,9 +14,16 @@ class Theater extends Model<
   name: string;
   // tslint:disable-next-line:variable-name
   number_of_seats: number;
-  age: number;
+  // tslint:disable-next-line:variable-name
+  list_of_features: string;
 
   static associate(models: any) {
+    this.hasMany(models.Seat, {
+      foreignKey: 'theaterId',
+    });
+    this.hasMany(models.Show, {
+      foreignKey: 'theaterId',
+    });
     // define association here
   }
 }
@@ -38,15 +45,18 @@ Theater.init(
       allowNull: false,
       defaultValue: 0,
     },
-    age: {
-      type: DataTypes.INTEGER,
+    list_of_features: {
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: '',
     },
   },
-  { sequelize: db.sequelize, tableName: 'theater' }
+  {
+    sequelize: db.sequelize,
+    tableName: 'theater',
+    createdAt: false,
+    updatedAt: false,
+  }
 );
-
-Theater.sync();
 
 export { Theater };

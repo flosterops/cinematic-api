@@ -15,6 +15,9 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   static associate(models: any) {
     // define association here
+    this.hasMany(models.Ticket, {
+      foreignKey: 'userId',
+    });
   }
 }
 
@@ -43,9 +46,12 @@ User.init(
       defaultValue: 'user',
     },
   },
-  { sequelize: db.sequelize, tableName: 'user' }
+  {
+    sequelize: db.sequelize,
+    tableName: 'user',
+    createdAt: false,
+    updatedAt: false,
+  }
 );
-
-User.sync();
 
 export { User };

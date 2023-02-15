@@ -1,40 +1,26 @@
 import { NextFunction, Request, Response } from 'express';
-import { Theater } from '../models/theater';
-import { InferCreationAttributes } from 'sequelize';
 import { ErrorException } from '../utils/error-handler/error-exception';
 import { ErrorCode } from '../utils/error-handler/error-code';
 import { getExistedFields } from '../utils/get-existed-fields';
-import { createArrayFromNumber } from '../utils/array/create-arrat-from-number';
-import { Seat } from '../models/seat';
+import { Show } from '../models/show';
+import { Theater } from '../models/theater';
+import { Movie } from '../models/movie';
 
 export const create = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { name, number_of_seats, list_of_features, number_of_rows } = req.body;
+  const { date, theaterId, movieId, price } = req.body;
 
   try {
-    const theater: Omit<
-      InferCreationAttributes<Theater, { omit: 'id' }>,
-      'id'
-    > = { name, number_of_seats: Number(number_of_seats), list_of_features };
-    const entity = await Theater.create(theater as any);
-
-    const arrayOfRows = createArrayFromNumber(Number(number_of_rows));
-    const arrayOfSeats = createArrayFromNumber(Number(number_of_seats));
-
-    arrayOfRows.forEach((row) => {
-      arrayOfSeats.forEach(async (seat) => {
-        await Seat.create({
-          number: seat,
-          row,
-          type: 'default',
-          reserved: false,
-          theaterId: entity.id,
-        } as any);
-      });
-    });
+    const show: any = {
+      date,
+      theaterId,
+      movieId,
+      price,
+    };
+    const entity = await Show.create(show as any);
 
     if (!entity) {
       return next(new ErrorException(ErrorCode.CreationFailed));
@@ -42,9 +28,11 @@ export const create = async (
 
     res.send({
       done: true,
-      theater: entity,
+      show: entity,
     });
   } catch (e) {
+    console.log(e);
+    res.send({ error: e });
     return next(new ErrorException(ErrorCode.CreationFailed));
   }
 };
@@ -55,20 +43,22 @@ export const update = async (
   next: NextFunction
 ) => {
   const { id } = req.params;
-  const { name, number_of_seats, list_of_features } = req.body;
+  const { date, price, theaterId, movieId } = req.body;
 
   try {
-    const theater = getExistedFields(
-      { name, number_of_seats, list_of_features },
-      ['name', 'number_of_seats', 'list_of_features']
-    );
-    const entity = await Theater.update(theater, { where: { id } });
+    const show = getExistedFields({ date, price, theaterId, movieId }, [
+      'date',
+      'price',
+      'theaterId',
+      'movieId',
+    ]);
+    const entity = await Show.update(show, { where: { id } });
 
     if (!entity) {
       return next(new ErrorException(ErrorCode.NotFound));
     }
 
-    res.send({ done: true, theater: entity });
+    res.send({ done: true, show: entity });
   } catch (e) {
     return next(new ErrorException(ErrorCode.NotFound));
   }
@@ -82,7 +72,7 @@ export const remove = async (
   const { id } = req.params;
 
   try {
-    const affectedEntities = await Theater.destroy({ where: { id } });
+    const affectedEntities = await Show.destroy({ where: { id } });
 
     if (!affectedEntities) {
       return next(new ErrorException(ErrorCode.NotFound));
@@ -100,8 +90,11 @@ export const getAll = async (
   next: NextFunction
 ) => {
   try {
-    const theaters = await Theater.findAll();
-    res.send({ done: true, theaters });
+    const shows = await Show.findAll({
+      include: [{ model: Theater }, { model: Movie }],
+    });
+
+    res.send({ done: true, shows });
   } catch (e) {
     return next(new ErrorException(ErrorCode.GetAllFailed));
   }
@@ -111,8 +104,11 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
-    const theater = await Theater.findOne({ where: { id } });
-    res.send({ done: true, theater });
+    const show = await Show.findOne({
+      where: { id },
+      include: [{ model: Theater }, { model: Movie }],
+    });
+    res.send({ done: true, show });
   } catch (e) {
     return next(new ErrorException(ErrorCode.GetAllFailed));
   }

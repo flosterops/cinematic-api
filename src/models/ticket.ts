@@ -11,10 +11,11 @@ class Ticket extends Model<
   InferCreationAttributes<Ticket>
 > {
   id: number;
-  price: number;
 
   static associate(models: any) {
-    // define association here
+    this.belongsTo(models.Show, { foreignKey: 'showId' });
+    this.belongsTo(models.Seat, { foreignKey: 'seatId' });
+    this.belongsTo(models.User, { foreignKey: 'userId' });
   }
 }
 
@@ -26,15 +27,13 @@ Ticket.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    price: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-    },
   },
-  { sequelize: db.sequelize, tableName: 'ticket' }
+  {
+    sequelize: db.sequelize,
+    tableName: 'ticket',
+    createdAt: false,
+    updatedAt: false,
+  }
 );
-
-Ticket.sync();
 
 export { Ticket };

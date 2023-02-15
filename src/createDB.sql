@@ -84,7 +84,7 @@ CREATE TABLE public.Seat (
     number INTEGER NOT NULL,
     row INTEGER NOT NULL,
     type INTEGER NOT NULL,
-    removable bool
+    reserved bool
 );
 
 ALTER TABLE public.Seat OWNER TO cinematic;
