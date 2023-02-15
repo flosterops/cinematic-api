@@ -17,7 +17,7 @@ router.get('/', AuthMiddleware, getAll);
 
 router.get('/get/:id', AuthMiddleware, get);
 
-router.patch('/update/:id', [AuthMiddleware, AuthMiddleware], update);
+router.patch('/update/:id', [AuthMiddleware, RoleMiddleware], update);
 
 router.delete('/delete/:id', [AuthMiddleware, RoleMiddleware], remove);
 
