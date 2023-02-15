@@ -7,6 +7,7 @@ import {
   create,
   get,
   getAll,
+  getSeatsByTheater,
   remove,
   update,
 } from '../controllers/seat.controller';
@@ -17,7 +18,9 @@ router.get('/', AuthMiddleware, getAll);
 
 router.get('/get/:id', AuthMiddleware, get);
 
-router.patch('/update/:id', [AuthMiddleware, AuthMiddleware], update);
+router.get('/get/seat-by-theater/:theaterId', getSeatsByTheater);
+
+router.patch('/update/:id', [AuthMiddleware, RoleMiddleware], update);
 
 router.delete('/delete/:id', [AuthMiddleware, RoleMiddleware], remove);
 

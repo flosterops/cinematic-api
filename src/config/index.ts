@@ -1,3 +1,3 @@
-export const PORT = 8000;
+export const PORT = 5000;
 export const JWT_SECRET = 'react-base-server-jwt';
-export const TOKEN_EXPIRES_IN = 60 * 60 * 24;
+export const TOKEN_EXPIRES_IN = 600 * 600 * 24;

@@ -17,6 +17,9 @@ class Movie extends Model<
   age: string;
 
   static associate(models: any) {
+    this.hasMany(models.Show, {
+      foreignKey: 'movieId',
+    });
     // define association here
   }
 }
@@ -46,9 +49,12 @@ Movie.init(
       defaultValue: 0,
     },
   },
-  { sequelize: db.sequelize, tableName: 'movie' }
+  {
+    sequelize: db.sequelize,
+    tableName: 'movie',
+    createdAt: false,
+    updatedAt: false,
+  }
 );
-
-Movie.sync();
 
 export { Movie };

@@ -11,14 +11,14 @@ export const create = async (
   next: NextFunction
 ) => {
   // tslint:disable-next-line:variable-name
-  const { number, row, type, removable } = req.body;
+  const { number, row, type, reserved } = req.body;
 
   try {
     const seat: Omit<InferCreationAttributes<Seat, { omit: 'id' }>, 'id'> = {
       number,
       row,
       type,
-      removable,
+      reserved,
     };
     const entity = await Seat.create(seat as any);
 
@@ -39,14 +39,14 @@ export const update = async (
 ) => {
   const { id } = req.params;
   // tslint:disable-next-line:variable-name
-  const { number, row, type, removable } = req.body;
+  const { number, row, type, reserved } = req.body;
 
   try {
-    const seat = getExistedFields({ number, row, type, removable }, [
+    const seat = getExistedFields({ number, row, type, reserved }, [
       'number',
       'row',
       'type',
-      'removable',
+      'reserved',
     ]);
     const entity = await Seat.update(seat, { where: { id } });
 
@@ -99,6 +99,22 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const seat = await Seat.findOne({ where: { id } });
     res.send({ done: true, seat });
+  } catch (e) {
+    return next(new ErrorException(ErrorCode.NotFound));
+  }
+};
+
+export const getSeatsByTheater = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { theaterId } = req.params;
+
+  try {
+    // /seat-by-theater
+    const seats = await Seat.findAll({ where: { theaterId } as any });
+    res.send({ done: true, seats });
   } catch (e) {
     return next(new ErrorException(ErrorCode.NotFound));
   }

@@ -14,7 +14,7 @@ class Rating extends Model<
   stars: number;
   review: string;
 
-  static associate(models: any) {
+  static associate() {
     // define association here
   }
 }
@@ -38,9 +38,12 @@ Rating.init(
       defaultValue: '',
     },
   },
-  { sequelize: db.sequelize, tableName: 'rating' }
+  {
+    sequelize: db.sequelize,
+    tableName: 'rating',
+    createdAt: false,
+    updatedAt: false,
+  }
 );
-
-Rating.sync();
 
 export { Rating };

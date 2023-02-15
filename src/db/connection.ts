@@ -23,14 +23,39 @@ const sequelize = new Sequelize(
   }
 );
 
-const db: IDB = {} as IDB;
+const db: any = {} as IDB;
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+import { Show } from '../models/show';
+import { Movie } from '../models/movie';
+import { Theater } from '../models/theater';
+import { Ticket } from '../models/ticket';
+import { User } from '../models/user';
+import { Rating } from '../models/rating';
+import { Seat } from '../models/seat';
+
+db.Show = Show;
+db.Movie = Movie;
+db.Theater = Theater;
+db.Ticket = Ticket;
+db.User = User;
+db.Rating = Rating;
+db.Seat = Seat;
+
+Show.associate(db);
+Movie.associate(db);
+Theater.associate(db);
+Ticket.associate(db);
+User.associate(db);
+Rating.associate(db);
+Seat.associate(db);
+
 const connect = async () => {
   try {
     await db.sequelize.authenticate();
+    await db.sequelize.sync();
     console.log('Successfully connected to DB');
   } catch (e: any) {
     console.log('Failed to connect to DB');
